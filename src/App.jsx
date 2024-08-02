@@ -54,6 +54,8 @@ function App() {
       <h3>{"valorHola: " + valorHola + " "+valorCantidad}</h3>
       <button onClick={requestPaises}> Obtener todos los paises</button>
       <button
+        className="btn btn-primary"
+
         onClick={() => {
           setValorHola("Hola kp");
           setValorCantidad(valorCantidad+1);
