@@ -4,14 +4,46 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import axios from 'axios';
 
+
 function App() {
 
+  const paisPosicionMinima = 0;
+  const paisPosicionMaxima = 249;
 
-  const [valorHola, setValorHola] = useState("Hola");
-  const [valorCantidad, setValorCantidad] = useState(0);
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // Selecciona un índice aleatorio entre 0 y i
+        const j = Math.floor(Math.random() * (i + 1));
+        
+        // Intercambia los elementos en los índices i y j
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 
 
   const [arrayPaises, setArrayPaises] = useState([]);
+
+
+  // Pais de la bandera que se muestra
+  const [paisSeleccionadoJuego, setPaisSeleccionadoJuego] = useState(undefined);
+
+  // Opciones de posibles respuestas
+  // {name: "Paraguay"}
+  const [posiblesRespuestasJuego, setPosiblesRespuestasJuego] = useState([]);
+
+
+  const verificarRespuestaCorrecta = (nombrePais)=>{
+
+    console.log("nombrePais seleccionado como respuesta: "+nombrePais);
+    if(nombrePais===paisSeleccionadoJuego.translations.spa.common){
+      alert("CORRECTO");
+    }else{
+      alert("INCORRECTO");
+    }
+
+  }
 
   //https://restcountries.com/
   const requestPaises = () => {
@@ -19,17 +51,46 @@ function App() {
       .then((response) => {
         // handle success
         //console.log(response);
-        
-        //console.log("data", );
 
-        setArrayPaises(response.data);
+        console.log("cantidad de registros", response.data.length);
+        const posicionPaisSeleccionado = Math.floor(Math.random() * (paisPosicionMaxima + 1));
+        const paisSeleccionado = response.data[posicionPaisSeleccionado];
+        console.log("posicionPaisSeleccionado", posicionPaisSeleccionado);
+        console.log("paisSeleccionado", paisSeleccionado);
+        setPaisSeleccionadoJuego(paisSeleccionado);
 
-        for(let i=0; i< response.data.length; i++){
-            const dataActual=response.data[i];
-            console.log(i+" ", dataActual);
-            console.log("name ", dataActual.name.common);
-            console.log("flags ", dataActual.flags.png);
+        let posiblesRespuestas = [];
+        posiblesRespuestas.push({ name: paisSeleccionado.translations.spa.common });
+
+
+        for (let i = 0; i < 3; i++) {
+          const posicionPosibleRespuesta = Math.floor(Math.random() * (paisPosicionMaxima + 1));
+          const paisPosibleRespuesta = response.data[posicionPosibleRespuesta];
+          posiblesRespuestas.push({ name: paisPosibleRespuesta.translations.spa.common });
         }
+
+        posiblesRespuestas = shuffleArray(posiblesRespuestas);
+
+        setPosiblesRespuestasJuego(posiblesRespuestas);
+
+
+
+
+
+
+        // console.log("data", response.data);
+
+
+
+
+        // setArrayPaises(response.data);
+
+        // for(let i=0; i< response.data.length; i++){
+        //     const dataActual=response.data[i];
+        //     console.log(i+" ", dataActual);
+        //     console.log("name ", dataActual.translations.spa.common);
+        //     console.log("flags ", dataActual.flags.png);
+        // }
 
 
       })
@@ -47,35 +108,53 @@ function App() {
 
   return (
     <>
-      <div>
-      </div>
-      <h1>Mi primera app react</h1>
-      <h2>Mi primer cambio</h2>
-      <h3>{"valorHola: " + valorHola + " "+valorCantidad}</h3>
-      <button onClick={requestPaises}> Obtener todos los paises</button>
-      <button
-        className="btn btn-primary"
 
-        onClick={() => {
-          setValorHola("Hola kp");
-          setValorCantidad(valorCantidad+1);
-        }
-        }
-      > Setear Valor Hola</button>
+      <div className="px-2 py-1 my-2 text-center">
+        {/* <img className="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> */}
+        <h1 className="display-6 fw-bold text-body-emphasis">Juego de Banderas</h1>
+        <div className="col-lg-6 mx-auto">
+          <p className=" mb-2">Elije a que país corresponde la bandera mostrada</p>
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button type="button" className="btn btn-success px-1 gap-3"
+              onClick={requestPaises}
+            >Jugar </button>
 
-      {/* <p>{JSON.stringify(arrayPaises)}</p> */}
-
-      {arrayPaises.map((item, index)=>{
-
-        return(
-          <div key={"k-"+index}>
-          <h6>{item.name.common}</h6>
-          <img src={item.flags.png}/>
           </div>
-        )
-      })
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {paisSeleccionadoJuego !== undefined ?
+              <div className='py-2'>
+                {/* <h1>{paisSeleccionadoJuego.translations.spa.common}</h1> */}
+                <img style={{
+                  maxHeight: 200
+                }}
+                  src={paisSeleccionadoJuego.flags.png} />
+              </div>
+              :
+              <h5 className='p-3'>Juego no iniciado</h5>
+            }
+          </div>
 
-      }
+          <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+
+            {posiblesRespuestasJuego.map((item, index) =>
+              <button key={"id-" + index}
+                type="button"
+                className="btn btn-outline-secondary px-1"
+
+                onClick={()=>{
+                  verificarRespuestaCorrecta(item.name);
+                }}
+
+              >
+                {item.name}
+              </button>
+            )
+            }
+          </div>
+
+          {/* {JSON.stringify(posiblesRespuestasJuego)} */}
+        </div>
+      </div>
 
     </>
   )
