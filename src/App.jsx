@@ -25,6 +25,7 @@ function App() {
 
   const [arrayPaises, setArrayPaises] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [puntaje, setPuntaje] = useState(0);
 
 
 
@@ -46,13 +47,15 @@ function App() {
     // console.log("nombrePais seleccionado como respuesta: " + nombrePais);
     if (item.name === paisSeleccionadoJuego.translations.spa.common) {
       // alert("CORRECTO");
+      setPuntaje(puntaje + 5);
       setTimeout(() => {
         setLoading(false);
         requestPaises();
-      }, 3000);
+      }, 2000);
 
     } else {
       // alert("INCORRECTO");
+      setPuntaje(puntaje - 3 );
       setTimeout(() => {
         setLoading(false);
         setRespuestaSeleccionada(undefined);
@@ -152,6 +155,7 @@ function App() {
             <button type="button" className="btn btn-success px-1 gap-3"
               onClick={requestPaises}
             >Jugar </button>
+            <h3>Puntos: {puntaje}</h3>
 
           </div>
           <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
