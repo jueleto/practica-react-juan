@@ -163,12 +163,12 @@ function App() {
               <div className='py-2'>
                 {/* <h1>{paisSeleccionadoJuego.translations.spa.common}</h1> */}
                 <img style={{
-                  maxHeight: 200
+                  maxHeight: 180
                 }}
                   src={paisSeleccionadoJuego.flags.png} />
               </div>
               :
-              <h5 className='p-3'>Juego no iniciado</h5>
+              <h5 className='p-3'>Juego no iniciado, presioner "Jugar"</h5>
             }
           </div>
 
