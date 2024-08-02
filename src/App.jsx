@@ -150,7 +150,7 @@ function App() {
         {/* <img className="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> */}
         <h1 className="display-6 fw-bold text-body-emphasis">Juego de Banderas</h1>
         <div className="col-lg-6 mx-auto">
-          <p className=" mb-2">Elije a que país corresponde la bandera mostrada</p>
+          <p className=" mb-2">Elige a que país corresponde la bandera mostrada</p>
           <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
             <button type="button" className="btn btn-success px-1 gap-3"
               onClick={requestPaises}
