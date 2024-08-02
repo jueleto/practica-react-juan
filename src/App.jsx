@@ -12,18 +12,20 @@ function App() {
 
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        // Selecciona un índice aleatorio entre 0 y i
-        const j = Math.floor(Math.random() * (i + 1));
-        
-        // Intercambia los elementos en los índices i y j
-        [array[i], array[j]] = [array[j], array[i]];
+      // Selecciona un índice aleatorio entre 0 y i
+      const j = Math.floor(Math.random() * (i + 1));
+
+      // Intercambia los elementos en los índices i y j
+      [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-}
+  }
 
 
 
   const [arrayPaises, setArrayPaises] = useState([]);
+  const [loading, setLoading] = useState(false);
+
 
 
   // Pais de la bandera que se muestra
@@ -33,20 +35,37 @@ function App() {
   // {name: "Paraguay"}
   const [posiblesRespuestasJuego, setPosiblesRespuestasJuego] = useState([]);
 
+  // lugar donde se guarda la respuesta
+  const [respuestaSeleccionada, setRespuestaSeleccionada] = useState();
 
-  const verificarRespuestaCorrecta = (nombrePais)=>{
+  const verificarRespuestaCorrecta = (item) => {
+    setLoading(true);
 
-    console.log("nombrePais seleccionado como respuesta: "+nombrePais);
-    if(nombrePais===paisSeleccionadoJuego.translations.spa.common){
-      alert("CORRECTO");
-    }else{
-      alert("INCORRECTO");
+    setRespuestaSeleccionada(item);
+
+    // console.log("nombrePais seleccionado como respuesta: " + nombrePais);
+    if (item.name === paisSeleccionadoJuego.translations.spa.common) {
+      // alert("CORRECTO");
+      setTimeout(() => {
+        setLoading(false);
+        requestPaises();
+      }, 3000);
+
+    } else {
+      // alert("INCORRECTO");
+      setTimeout(() => {
+        setLoading(false);
+        setRespuestaSeleccionada(undefined);
+      }, 1000);
     }
 
   }
 
   //https://restcountries.com/
   const requestPaises = () => {
+
+    setRespuestaSeleccionada(undefined);
+
     axios.get('https://restcountries.com/v3.1/all')
       .then((response) => {
         // handle success
@@ -105,6 +124,21 @@ function App() {
   }
 
 
+  const retornarClaseBotonOpcion = (item) => {
+
+    if (respuestaSeleccionada) {
+      if (respuestaSeleccionada.name === paisSeleccionadoJuego.translations.spa.common) {
+        if (item.name === respuestaSeleccionada.name) {
+          return "btn-success";
+        }
+      } else {
+        return "btn-danger";
+      }
+    }
+    return "btn-outline-secondary";
+    // + respuestaSeleccionada === undefined ? " btn-outline-secondary" :
+    // (respuestaSeleccionada.name === paisSeleccionadoJuego.translations.spa.common ? " btn-success" : " btn-danger")
+  }
 
   return (
     <>
@@ -139,11 +173,15 @@ function App() {
             {posiblesRespuestasJuego.map((item, index) =>
               <button key={"id-" + index}
                 type="button"
-                className="btn btn-outline-secondary px-1"
-
-                onClick={()=>{
-                  verificarRespuestaCorrecta(item.name);
+                className={
+                  "btn px-1 "
+                  + retornarClaseBotonOpcion(item)
+                }
+                onClick={() => {
+                  verificarRespuestaCorrecta(item);
                 }}
+
+                disabled={loading}
 
               >
                 {item.name}
