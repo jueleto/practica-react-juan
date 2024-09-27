@@ -168,7 +168,7 @@ function App() {
                   src={paisSeleccionadoJuego.flags.png} />
               </div>
               :
-              <h5 className='p-3'>Juego no iniciado, presioner "Jugar"</h5>
+              <h5 className='p-3'>Juego no iniciado, presionar "Jugar"</h5>
             }
           </div>
 
